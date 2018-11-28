@@ -85,12 +85,9 @@ def maximize(Y, gamma):
         Nk = np.sum(gamma[:, k])
         # 更新 mu
         # 对每个特征求均值
-        for d in range(D):
-            mu[k, d] = np.sum(np.multiply(gamma[:, k], Y[:, d])) / Nk
+        mu[k, :] = np.sum(np.multiply(Y, gamma[:, k]), axis=0) / Nk
         # 更新 cov
-        cov_k = np.mat(np.zeros((D, D)))
-        for i in range(N):
-            cov_k += gamma[i, k] * (Y[i] - mu[k]).T * (Y[i] - mu[k]) / Nk
+        cov_k = (Y - mu[k]).T * np.multiply((Y - mu[k]), gamma[:, k]) / Nk
         cov.append(cov_k)
         # 更新 alpha
         alpha[k] = Nk / N
